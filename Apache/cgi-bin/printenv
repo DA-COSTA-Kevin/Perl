@@ -1,0 +1,7 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+print "Content-Type: text/html\n\n";
+foreach my $k (sort keys %ENV) {
+   print "$k:&nbsp;$ENV{$k}<br>\n";
+}

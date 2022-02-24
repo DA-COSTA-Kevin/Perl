@@ -1,0 +1,12 @@
+[Thu Feb 24 16:55:07.305436 2022] [mpm_worker:notice] [pid 10016:tid 140401417557120] AH00292: Apache/2.4.38 (Debian) configured -- resuming normal operations
+[Thu Feb 24 16:55:07.306093 2022] [core:notice] [pid 10016:tid 140401417557120] AH00094: Command line: '/home/2inf1/kevin.da-costa-moura/Perl/Apache/bin/httpd -f /home/2inf1/kevin.da-costa-moura/Perl/Apache/conf/httpd.conf'
+[Thu Feb 24 16:57:19.352887 2022] [mpm_worker:notice] [pid 10016:tid 140401417557120] AH00295: caught SIGTERM, shutting down
+[Thu Feb 24 16:58:54.948823 2022] [mpm_worker:notice] [pid 10266:tid 140305639785600] AH00292: Apache/2.4.38 (Debian) configured -- resuming normal operations
+[Thu Feb 24 16:58:54.949127 2022] [core:notice] [pid 10266:tid 140305639785600] AH00094: Command line: '/home/2inf1/kevin.da-costa-moura/Perl/Apache/bin/httpd -f /home/2inf1/kevin.da-costa-moura/Perl/Apache/conf/httpd.conf'
+[Thu Feb 24 16:58:57.337957 2022] [cgid:error] [pid 10325:tid 140305639785600] (13)Permission denied: AH01241: exec of '/home/2inf1/kevin.da-costa-moura/Perl/Apache/cgi-bin/printenv' failed
+[Thu Feb 24 16:58:57.340322 2022] [cgid:error] [pid 10269:tid 140305625691904] [client 127.0.0.1:42134] End of script output before headers: printenv
+[Thu Feb 24 17:01:34.788322 2022] [cgid:error] [pid 10431:tid 140305639785600] (13)Permission denied: AH01241: exec of '/home/2inf1/kevin.da-costa-moura/Perl/Apache/cgi-bin/printenv' failed
+[Thu Feb 24 17:01:34.790580 2022] [cgid:error] [pid 10269:tid 140305617299200] [client 127.0.0.1:42180] End of script output before headers: printenv
+[Thu Feb 24 17:01:35.893674 2022] [cgid:error] [pid 10433:tid 140305639785600] (13)Permission denied: AH01241: exec of '/home/2inf1/kevin.da-costa-moura/Perl/Apache/cgi-bin/printenv' failed
+[Thu Feb 24 17:01:35.894763 2022] [cgid:error] [pid 10268:tid 140305608906496] [client 127.0.0.1:42182] End of script output before headers: printenv
+[Thu Feb 24 17:13:58.670687 2022] [cgid:error] [pid 10269:tid 140305608906496] [client 127.0.0.1:42410] AH01264: script not found or unable to stat: /home/2inf1/kevin.da-costa-moura/Perl/Apache/cgi-bin/ex5

@@ -1,0 +1,146 @@
+#!/bin/sh
+#
+# Apache control script designed to allow an easy command line interface
+# to controlling Apache.  Written by Marc Slemko, 1997/08/23
+# 
+# The exit codes returned are:
+#	0 - operation completed successfully
+#	1 - 
+#	2 - usage error
+#	3 - apache could not be started
+#	4 - apache could not be stopped
+#	5 - apache could not be started during a restart
+#	6 - apache could not be restarted during a restart
+#	8 - configuration syntax error
+#
+# When multiple arguments are given, only the error from the _last_
+# one is reported.  Run "apachectl help" for usage info
+#
+#
+# |||||||||||||||||||| START CONFIGURATION SECTION  ||||||||||||||||||||
+# --------------------                              --------------------
+# 
+# the path to your PID file
+PIDFILE='/home/2inf1/kevin.da-costa-moura/Perl/Apache/run/httpd.pid'
+#
+# the path to your httpd.conf
+CONF='/home/2inf1/kevin.da-costa-moura/Perl/Apache/conf/httpd.conf'
+#
+# the path to your httpd binary, including options if necessary
+HTTPD='/home/2inf1/kevin.da-costa-moura/Perl/Apache/bin/httpd'
+#
+# a command that outputs a formatted text version of the HTML at the
+# url given on the command line.  Designed for lynx, however other
+# programs may work.  
+LYNX="lynx -dump"
+#
+# the URL to your server's mod_status status page.  If you do not
+# have one, then status and fullstatus will not work.
+STATUSURL="http://localhost:8080/server-status"
+#
+# --------------------                              --------------------
+# ||||||||||||||||||||   END CONFIGURATION SECTION  ||||||||||||||||||||
+
+ERROR=0
+ARGV="$@"
+if [ "x$ARGV" = "x" ] ; then 
+    ARGS="help"
+fi
+
+for ARG in $@ $ARGS
+do
+    # check for pidfile
+    if [ -f "$PIDFILE" ] ; then
+	PID=`cat "$PIDFILE"`
+	if [ "x$PID" != "x" ] && kill -0 $PID 2>/dev/null ; then
+	    STATUS="apache (pid $PID) running"
+	    RUNNING=1
+	else
+	    STATUS="apache (pid $PID?) not running"
+	    RUNNING=0
+	fi
+    else
+	STATUS="apache (no pid file) not running"
+	RUNNING=0
+    fi
+
+    case $ARG in
+    start)
+	if [ $RUNNING -eq 1 ]; then
+	    echo "$0 $ARG: apache (pid $PID) already running"
+	    continue
+	fi
+	if "$HTTPD" -f "$CONF" ; then
+	    echo "$0 $ARG: apache started"
+	else
+	    echo "$0 $ARG: apache could not be started"
+	    ERROR=3
+	fi
+	;;
+    stop)
+	if [ $RUNNING -eq 0 ]; then
+	    echo "$0 $ARG: $STATUS"
+	    continue
+	fi
+	if kill $PID ; then
+	    echo "$0 $ARG: apache stopped"
+	else
+	    echo "$0 $ARG: apache could not be stopped"
+	    ERROR=4
+	fi
+	;;
+    restart)
+	if [ $RUNNING -eq 0 ]; then
+	    echo "$0 $ARG: apache not running, trying to start"
+	    if "$HTTPD" -f "$CONF" ; then
+		echo "$0 $ARG: apache started"
+	    else
+		echo "$0 $ARG: apache could not be started"
+		ERROR=5
+	    fi
+	else
+	    if "$HTTPD" -t  -f "$CONF" >/dev/null 2>&1; then
+		if kill -HUP $PID ; then
+		    echo "$0 $ARG: apache restarted"
+		else
+		    echo "$0 $ARG: apache could not be restarted"
+		    ERROR=6
+		fi
+	    else
+		echo "$0 $ARG: configuration broken, ignoring restart"
+		echo "$0 $ARG: (run 'apachectl configtest' for details)"
+		ERROR=6
+	    fi
+	fi
+	;;
+    status)
+	echo $STATUS
+	;;
+    configtest)
+	if "$HTTPD" -t -f "$CONF"; then
+	    :
+	else
+	    ERROR=8
+	fi
+	;;
+    *)
+	echo "usage: $0 (start|stop|restart|status|configtest|help)"
+	cat <<EOF
+
+start      - start apache
+stop       - stop apache
+restart    - restart apache if running by sending a SIGHUP or start if not running
+status     - dump a short status screen
+configtest - do a configuration syntax test
+help       - this screen
+
+EOF
+	ERROR=2
+    ;;
+
+    esac
+
+done
+
+exit $ERROR
+
